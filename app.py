@@ -10,8 +10,8 @@ import csv, os, re, shutil
 #### GLOBAL VARIABLES ####
 headers = ''
 screen = get_monitors()[0]
-s_w = int(screen.width/1.5)
-s_h = int(screen.height/1.5)
+s_w = int(screen.width/2)
+s_h = int(screen.height/2)
 arr_test = []
 df = pd.DataFrame()
 # pd.set_option('display.max_rows', None)
@@ -105,77 +105,48 @@ def save_csv_file(sender, data):
     df.to_csv('newdata.csv', index = True) 
 
 
+def main():
+
+    #### MAIN PROGRAM ####
+
+    set_main_window_size(s_w, s_h)
+    set_main_window_pos(int(s_w/2), int(s_h/2))
+    set_main_window_title("SheetyApp")
+    with window("main"):
+        with tab_bar("tabs"):
+            with tab("test"):
+
+                # pick csv file #
+                add_button("browse", callback=select_file)
+                add_same_line(spacing=10)
+                add_label_text("lbl_path")
+                
+
+                # inputs #
+                add_input_text("rxp", width=240)
+                add_combo("source_data", items=[""], default_value="all", width=240)
+                add_combo("column_destination", items=[""], default_value="", width=240)
+                
+
+                # buttons #
+                add_button("run", callback=get_vals)
+                add_same_line(spacing=10)
+                add_button("export", callback=save_csv_file)
 
 
-#### MAIN PROGRAM ####
+            with tab("analyze"):
+                add_table("table##widget", ["Column 1", "Column 2", "Column 3", "Column 4"])
+                tabledata = []
+                for i in range(0, 4):
+                    row = []
+                    for j in range(0, 4):
+                        # print(dt[i][j])
+                        row.append("")
+                    tabledata.append(row)
 
-set_main_window_size(s_w, s_h)
-set_main_window_pos(int(s_w/2), int(s_h/2))
-set_main_window_title("SheetyApp")
-with window("main"):
-    with tab_bar("tabs"):
-        with tab("setup"):
+                set_value("table##widget", tabledata)
 
-            # pick csv file #
-            add_button("browse", callback=select_file)
-            add_same_line(spacing=10)
-            add_label_text("lbl_path")
-            
+    start_dearpygui(primary_window="main")
 
-            # inputs #
-            add_input_text("rxp", width=240)
-            add_combo("source_data", items=[""], default_value="all", width=240)
-            add_combo("column_destination", items=[""], default_value="", width=240)
-            
-
-            # buttons #
-            add_button("run", callback=get_vals)
-            add_same_line(spacing=10)
-            add_button("export", callback=save_csv_file)
-
-
-
-
-
-
-        with tab("modify"):
-
-            with tree_node("Tree Node1##widget"):
-                for i in range(0, 3):
-                    add_text("Item" + str(i))
-            with tree_node("Tree Node2##widget"):
-                for i in range(0, 3):
-                    add_text("Item" + str(i))
-
-            with collapsing_header("Collapsing Header##widget"):
-                for i in range(0, 10):
-                    add_text("Item " + str(i) + " belonging to a collapsing header")
-
-            with child("Child##widget", width=220, height=100):
-                for i in range(0, 10):
-                    add_text("Item " + str(i) + " belonging to a child")
-
-            add_same_line(spacing=50)
-            with group("Group##widget"):
-                add_text("Group")
-                for i in range(0, 3):
-                    add_button("Button" + str(i) + "##widgetgroup")
-
-
-
-
-
-
-        with tab("analyze"):
-            add_table("table##widget", ["Column 1", "Column 2", "Column 3", "Column 4"])
-            tabledata = []
-            for i in range(0, 4):
-                row = []
-                for j in range(0, 4):
-                    # print(dt[i][j])
-                    row.append("")
-                tabledata.append(row)
-
-            set_value("table##widget", tabledata)
-
-start_dearpygui(primary_window="main")
+if __name__ == "__main__":
+    main()
