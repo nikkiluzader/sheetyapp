@@ -4,7 +4,7 @@ from screeninfo import get_monitors
 import openpyxl as xl
 import numpy as np
 import pandas as pd
-import csv, os, re, shutil
+import csv, os, re, shutil, time
 
 
 #### GLOBAL VARIABLES ####
@@ -64,6 +64,7 @@ def get_vals_single_col(src):
             print(row[0])
 
 def get_vals_all_data():
+    tic = time.perf_counter()
     csv_path = get_value("lbl_path")
     with open(str(csv_path)) as fp:
         reader = csv.reader(fp, delimiter=",", quotechar='"')
@@ -96,6 +97,8 @@ def get_vals_all_data():
     arr_test.clear()
     log_info("logging dataframe...")
     log_info(df)
+    toc = time.perf_counter()
+    log_info(f"finished in {toc - tic:0.4f} seconds")
 
 
 
